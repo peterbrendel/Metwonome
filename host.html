@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>Metwonome</title>
+        <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/main.css"/>
+        <script> // PeerJS metronome host logic
+        let label;
+        let peer;
+        let connection;
+        let handshake = false;
+        
+        window.onload = function() {
+            peer = new Peer();
+            
+            peer.on('open', (id) => {
+                let field = document.getElementById("connId");
+                field.innerText += " " + id;
+            });
+
+            peer.on('connection', (conn) => {
+                connection = conn;
+                document.getElementById("inputDiv").style.display="none";
+                document.getElementById("content").style.display="block";
+                document.getElementById("connName").innerText = label + " connected with " + conn.label;
+
+                handshake = setInterval(() => conn.send({flag: "handshake", label: label}), 1000);
+
+                conn.on('data', (data) => {
+                    console.log(data);
+                    switch(data.flag) {
+                        case "handshake":
+                            clearInterval(handshake);
+                            break;
+                    }
+                });
+            });
+        }
+
+        function setLabel() {
+            let elem = document.getElementById("label");
+            label = elem.value;
+            elem.parentNode.style.display="none";
+            document.getElementById("shareId").style.display="block";
+        }
+        </script>
+    </head> 
+
+    <body>
+        <nav>
+            <ul class="navbar">
+                <li class="left"><a href="index.html">Home</a></li>
+                <li class="left"><a href="host.html">New Room</a></li>
+                <li class="left"><a href="client.html">Join Room</a></li>
+                <li class="right"><a href="https://github.com/peterbrendel/Metwonome">Git</a></li>
+            </ul>
+        </nav>
+        <div id="inputDiv" align="center" style="padding: 80px;">
+            <div id="labelDiv">
+                <input id="label" type="text" placeholder="What is your name?"></input>
+                <a class="button" onclick=setLabel()>Confirm</a> <br>
+            </div>
+            <div hidden id="shareId">
+                <a style="font-size: 32px;">Share ID with partner</a><br>
+                <a style="font-size: 24px;" id="connId">ID: </a>
+            </div>
+        </div>
+        <div hidden id="content" class="content">
+            <h1 align="center">Metwonome Session</h1>    
+            <h2 id="connName" align="center"></h2>
+        </div> <!-- content-->
+    </body>
+</html>

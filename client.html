@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <title>Metwonome</title>
+        <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/main.css"/>
+        <script> // PeerJS metronome host logic
+            let peer;
+            let conn;
+            let label
+
+            window.onload = function() {
+                peer = new Peer();
+                peer.on('open', (id) => {
+                    document.getElementById("idIn").disabled = false;
+                });
+
+                peer.on('error', (e) => {
+                    document.getElementById("content").style.display="none";
+                    document.getElementById("inputDiv").style.display="block";
+                    document.getElementById("error").innerHTML = e.type;
+                });
+            }
+
+            function handshake(data) {
+                console.log(data);
+                document.getElementById("connName").innerText = label + " connected with " + data.label;
+            }
+
+            function tryConnection() {
+                let id = document.getElementById("idIn").value;
+                conn = peer.connect(id, {label: label});
+
+                conn.on('open', () => {
+                    document.getElementById("inputDiv").style.display="none";
+                    document.getElementById("content").style.display="block";
+                    conn.on('data', (data) => {
+                        switch(data.flag) {
+                            case "handshake":
+                                handshake(data);
+                                conn.send({flag: "handshake"});
+                                break;
+                        }
+                    });                    
+                });
+            }
+
+            function setLabel() {
+                let elem = document.getElementById("label");
+                label = elem.value;
+                elem.parentNode.style.display="none";
+                document.getElementById("shareId").style.display="block";
+            }
+            
+        </script>
+    </head> 
+
+    <body>
+        <nav>
+            <ul class="navbar">
+                <li class="left"><a href="index.html">Home</a></li>
+                <li class="left"><a href="host.html">New Room</a></li>
+                <li class="left"><a href="client.html">Join Room</a></li>
+                <li class="right"><a href="https://github.com/peterbrendel/Metwonome">Git</a></li>
+            </ul>
+        </nav>
+        
+        <div id="inputDiv" align="center" style="padding: 80px;">
+            <div id="labelDiv">
+                <input id="label" type="text" placeholder="What is your name?"></input>
+                <a class="button" onclick=setLabel()>Confirm</a> <br>
+            </div>
+            <div hidden id="shareId">
+                <a style="font-size: 32px;">Insert partner ID</a><br>
+                <input disabled id="idIn" type="text" placeholder="e.g. tevubxdsey000000" oninput=tryConnection()></input>
+                <p id="error" style="color: red;"></p>
+            </div>
+        </div>
+
+        <div hidden id="content" class="content">
+            <h1 align="center">Metwonome Session</h1>    
+            <h2 id="connName" align="center">Connected with </h2>
+        </div> <!-- content-->
+
+
+    </body>
+</html>

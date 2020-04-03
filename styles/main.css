@@ -2,36 +2,40 @@
     font-family: 'Lucida Sans';
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     background-color: #bbbbbb;
     margin: 0;
-}
-
-a {
-    color: red;
 }
 
 ul.navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    position: fixed;
-    width:100%;
     overflow: hidden;
-    background-color: #333
+    background-color: #333;
 }
 
-li {
-    display: block;
+ul li {
     float: left;
-    background-color: #333;
+    min-width: 50px;
+}
+
+ul li a {
+    color: #bbbbbb;
+    display: block;
     text-align: center;
     padding: 14px 16px;
-    min-width: 60px;
 }
 
 li:hover {
-    background-color: #fcd284;
+    background-color: #bbbbbb;
+}
+li a:hover {
+    color: #333;
 }
 
 li.left {
@@ -49,20 +53,48 @@ li.right {
 h1 {
     margin-bottom: 0px;
     font-size: 72px;
+    color: #333;
 }
 
 h2 {
     margin-top: 0px;
     margin-bottom: 60px;
+    color: #333;
 }
 
-button {
+input {
+    width: 40%;
+    margin: 8px 0;
+    padding: 14px 16px;
+    font-size: 32px;
+    border: 1px solid #333;
+    
+
+}
+a.button {
+    display: inline-block;
     background: #333;
     border: none;
-    padding: 10px;
-}
-
-button a {
+    padding: 14px 16px;
     font-size: 32px;
     color: #bbbbbb;
 }
+
+a.button:hover {
+    animation: fadeColors 0.5s;
+    background-color: #bbbbbb; 
+    color: #333;
+    cursor: pointer;
+}
+
+@keyframes fadeColors {
+    from {
+            background-color: #333;
+            color: #bbbbbb;    
+        } 
+    to  { 
+            background-color: #bbbbbb; 
+            color: #333;
+        } 
+}
+
