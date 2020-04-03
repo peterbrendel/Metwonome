@@ -1,2 +1,2 @@
-# metwonome
+# Metwonome
 Metronome for online lessons
