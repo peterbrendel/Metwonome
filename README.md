@@ -1,2 +1,2 @@
-# Pairnometer
+# metwonome
 Metronome for online lessons
